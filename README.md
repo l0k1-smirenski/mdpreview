@@ -1,7 +1,10 @@
 mdpreview-gtk3
 ==============
 
-**NOTE** This is a fork that l0k1-smirenski is adopting in order to fork to Gtk+-3.0 as part of another project, called 'steemportal' - as this codebase directly relates to this project due to the fact that Steem uses markdown, and steemportal uses gtk3 and python 3.
+**NOTE** This is a fork that l0k1-smirenski is adopting in order to fork 
+to Gtk+-3.0 as part of another project, called 'steemportal' - as this 
+codebase directly relates to this project due to the fact that Steem 
+uses markdown, and steemportal uses gtk3 and python 3.
 
 A simple GTK-based Markdown previewer, designed to be used with an external
 editor.
