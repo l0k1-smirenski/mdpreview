@@ -1,0 +1,13 @@
+<schemalist>
+    <schema id="org.ascension.mdpreview" path="/org/ascension/mdpreview/">
+
+        <key name="lastviewed" type="s">
+            <default>""</default>
+            <summary>Last viewed file</summary>
+            <description>
+                Last file opened by mdpreview-gtk3
+            </description>
+        </key>
+
+    </schema>
+</schemalist>
