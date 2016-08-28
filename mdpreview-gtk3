@@ -1,27 +1,23 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 # TODO
 # - Images are not reloaded.
 
-import sys
-import os
-import optparse
-import gtk
-import gobject
-import webkit
-import json
-import markdown
-import pyinotify
-
+import sys, os, optparse, gi, json, markdown, pyinotify
+gi.require_version('Gtk', '3.0')
+gi.require_version('WebKit', '3.0')
+from gi.repository import Gtk
+from gi.repository import WebKit
+from gi.repository import GObject
 
 # Toolbar items:
 #    (stock_id, label/tooltip, callback_name, private_label, position)
 #  callback_name will be mapped to GUI.ev_tb_XXX methods
 toolbar_items = (
-    (gtk.STOCK_GO_BACK, "Back", "back", None, 0),
-    (gtk.STOCK_REFRESH, "Reload", "reload", None, 1),
-    (gtk.STOCK_SAVE, "Save", "save", None, 2),
-    (gtk.STOCK_CLOSE, "Close",  "stop", None, 3),
+    (Gtk.STOCK_GO_BACK, "Back", "back", None, 0),
+    (Gtk.STOCK_REFRESH, "Reload", "reload", None, 1),
+    (Gtk.STOCK_SAVE, "Save", "save", None, 2),
+    (Gtk.STOCK_CLOSE, "Close",  "stop", None, 3),
 )
 
 theme_items = (
@@ -149,7 +145,7 @@ class GUI:
         self.load_config()
 
         # Construct the main window with some basic event handlers
-        self.win_main = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.win_main = Gtk.Window(Gtk.WindowType.TOPLEVEL)
         self.win_main.resize(self.config['width'], self.config['height'])
         self.win_main.connect("destroy", self.ev_destroy)
         self.win_main.connect("configure-event", self.ev_configure_event)
@@ -157,46 +153,46 @@ class GUI:
         if self.keep_on_top:
             self.win_main.set_keep_above(True)
 
-        # Construct the webkit HTML view
-        self.webview = webkit.WebView()
+        # Construct the WebKit. HTML view
+        self.webview = WebKit.WebView()
         ws = self.webview.get_settings()
         ws.set_property('enable-plugins',False)
         self.webview.set_settings(ws)
         self.webview.set_zoom_level(self.config['zoom_level'])
         self.webview.set_maintains_back_forward_list(True)
         self.webview.connect('notify::load-status', self.ev_load_status)
-        self.scroll_window = gtk.ScrolledWindow(None, None)
+        self.scroll_window = Gtk.ScrolledWindow(None, None)
         self.scroll_window.add(self.webview)
 
         # Put together the toolbar from the `toolbar_items`.
-        self.toolbar = gtk.Toolbar()
-        self.toolbar.set_orientation(gtk.ORIENTATION_HORIZONTAL)
-        self.toolbar.set_style(gtk.TOOLBAR_BOTH_HORIZ)
+        self.toolbar = Gtk.Toolbar()
+        self.toolbar.set_orientation(Gtk.Orientation.HORIZONTAL)
+        self.toolbar.set_style(Gtk.ToolbarStyle.BOTH_HORIZ)
         for toolbar_item in toolbar_items:
             stock_item, tooltip, callback, user_data, pos = toolbar_item
             callback_method = getattr(self, 'ev_tb_' + callback)
-            button = gtk.ToolButton(stock_item)
+            button = Gtk.ToolButton(stock_item)
             button.set_tooltip_text(tooltip)
             button.connect('clicked', callback_method)
             button.set_is_important(True)
             self.toolbar.insert(button, pos)
 
         # Add a template selection dropdown to the toolbar
-        menu = gtk.Menu()
+        menu = Gtk.Menu()
         for theme_item in theme_items:
-            menu_item = gtk.MenuItem(theme_item[0])
+            menu_item = Gtk.MenuItem(theme_item[0])
             menu_item.connect('activate', self.ev_tb_theme, theme_item[1])
             menu.append(menu_item)
             menu_item.show()
-        toolbar_theme_menu = gtk.MenuToolButton(gtk.STOCK_PROPERTIES)
+        toolbar_theme_menu = Gtk.MenuToolButton(Gtk.STOCK_PROPERTIES)
         toolbar_theme_menu.set_tooltip_text('Themes')
         toolbar_theme_menu.set_menu(menu)
         self.toolbar.insert(toolbar_theme_menu, 4)
 
         # Pick it, pack it, fire it up, come along...
-        vbox = gtk.VBox()
-        vbox.pack_start(self.toolbar, expand=False)
-        vbox.pack_start(self.scroll_window, expand=True, fill=True)
+        vbox = Gtk.Box()
+        vbox.pack_start(self.toolbar, False, False, 0)
+        vbox.pack_start(self.scroll_window, True, True, 0)
 
         self.win_main.add(vbox)
         self.win_main.show_all()
@@ -206,13 +202,13 @@ class GUI:
 
         # Periodically trigger inotify events
         self.mdrenderer.add_watch_notify_callback(self.do_reload)
-        gobject.timeout_add(200, self.auto_reload_timer)
+        GObject.timeout_add(200, self.auto_reload_timer)
 
     def run(self):
         """
         Start the GUI
         """
-        gtk.main()
+        Gtk.main()
 
     def load_config(self):
         """
@@ -241,8 +237,8 @@ class GUI:
         # Save some scrolling state information so we can reset it after
         # reload.
         vadj = self.scroll_window.get_vadjustment()
-        self.scroll_pos = vadj.value
-        self.at_bottom = vadj.value == (vadj.upper - vadj.page_size)
+        self.scroll_pos = vadj.get_value ()
+        self.at_bottom = vadj.get_value == (vadj.get_upper () - vadj.get_page_size())
 
         md_html = self.mdrenderer.render()
         md_path = self.mdrenderer.get_md_path()
@@ -260,7 +256,7 @@ class GUI:
         Save the configuration and stop the GUI
         """
         self.save_config()
-        gtk.main_quit()
+        Gtk.main_quit()
 
     def do_back(self, toolbar_item=None):
         """
@@ -284,14 +280,14 @@ class GUI:
         """
         Save rendered markdown to a file.
         """
-        file_chooser = gtk.FileChooserDialog(
-            action=gtk.FILE_CHOOSER_ACTION_SAVE,
+        file_chooser = Gtk.FileChooserDialog(
+            action=Gtk.FILE_CHOOSER_ACTION_SAVE,
             buttons=(
-                gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-                gtk.STOCK_SAVE, gtk.RESPONSE_OK
+                Gtk.STOCK_CANCEL, Gtk.RESPONSE_CANCEL,
+                Gtk.STOCK_SAVE, Gtk.RESPONSE_OK
             ))
         response = file_chooser.run()
-        if response == gtk.RESPONSE_OK:
+        if response == Gtk.RESPONSE_OK:
             md_html = self.mdrenderer.render()
             open(file_chooser.get_filename(), 'w').write(md_html)
         file_chooser.destroy()
@@ -316,32 +312,32 @@ class GUI:
         """
         Handle keypress events.
         """
-        if ev.keyval in (gtk.keysyms.Escape, gtk.keysyms.q):
+        if ev.keyval in (Gtk.keysyms.Escape, Gtk.keysyms.q):
             self.do_stop()
-        elif ev.keyval in (gtk.keysyms.plus, gtk.keysyms.equal):
+        elif ev.keyval in (Gtk.keysyms.plus, Gtk.keysyms.equal):
             self.webview.set_zoom_level(self.webview.get_zoom_level() + 0.2)
-        elif ev.keyval == gtk.keysyms.minus:
+        elif ev.keyval == Gtk.keysyms.minus:
             self.webview.set_zoom_level(self.webview.get_zoom_level() - 0.2)
-        elif ev.keyval == gtk.keysyms.r:
+        elif ev.keyval == Gtk.keysyms.r:
             self.do_reload()
-        elif ev.keyval == gtk.keysyms.j:
+        elif ev.keyval == Gtk.keysyms.j:
             # Scroll down
             vadj = self.scroll_window.get_vadjustment()
             if vadj.value < (vadj.upper - vadj.page_size):
                 vadj.set_value(vadj.get_value() + 16)
-        elif ev.keyval == gtk.keysyms.k:
+        elif ev.keyval == Gtk.keysyms.k:
             # Scroll up
             vadj = self.scroll_window.get_vadjustment()
             vadj.set_value(vadj.get_value() - 16)
-        elif ev.keyval == gtk.keysyms.G:
+        elif ev.keyval == Gtk.keysyms.G:
             # Scroll to bottom
             vadj = self.scroll_window.get_vadjustment()
             vadj.set_value(vadj.upper - vadj.page_size)
-        elif ev.keyval == gtk.keysyms.g:
+        elif ev.keyval == Gtk.keysyms.g:
             # Scroll to top
             vadj = self.scroll_window.get_vadjustment()
             vadj.set_value(0)
-        elif ev.keyval == gtk.keysyms.s:
+        elif ev.keyval == Gtk.keysyms.s:
             # Save document
             self.do_save()
 
@@ -370,10 +366,10 @@ class GUI:
         """
         if (
             self.did_reload and
-            self.webview.get_load_status() == webkit.LOAD_FINISHED
+            self.webview.get_load_status() == WebKit.LOAD_FINISHED
            ):
-            while gtk.events_pending():
-                gtk.main_iteration_do()
+            while Gtk.events_pending():
+                Gtk.main_iteration_do()
             vadj = self.scroll_window.get_vadjustment()
             if not self.at_bottom:
                 # Scroll back to previous position

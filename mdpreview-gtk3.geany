@@ -28,12 +28,17 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=2
-FILE_NAME_0=0;Sh;0;EUTF-8;1;1;0;%2Fhome%2Fl0k1%2Fprojects%2Fmdpreview-gtk3%2Finstall.sh;0;4
-FILE_NAME_1=0;None;0;EUTF-8;1;1;0;%2Fhome%2Fl0k1%2Fprojects%2Fmdpreview-gtk3%2FLICENSE;0;4
-FILE_NAME_2=0;Python;0;EUTF-8;1;1;0;%2Fhome%2Fl0k1%2Fprojects%2Fmdpreview-gtk3%2Fmdpreview-gtk3;0;4
-FILE_NAME_3=247;Markdown;0;EUTF-8;1;1;0;%2Fhome%2Fl0k1%2Fprojects%2Fmdpreview-gtk3%2FREADME.md;0;4
-FILE_NAME_4=0;Sh;0;EUTF-8;1;1;0;%2Fhome%2Fl0k1%2Fprojects%2Fmdpreview-gtk3%2Funinstall.sh;0;4
+current_page=0
+FILE_NAME_0=18;Python;0;EUTF-8;1;1;0;%2Fhome%2Fl0k1%2Fprojects%2Fmdpreview-gtk3%2Fmdpreview-gtk3;0;4
+FILE_NAME_1=247;Markdown;0;EUTF-8;1;1;0;%2Fhome%2Fl0k1%2Fprojects%2Fmdpreview-gtk3%2FREADME.md;0;4
+FILE_NAME_2=0;Sh;0;EUTF-8;1;1;0;%2Fhome%2Fl0k1%2Fprojects%2Fmdpreview-gtk3%2Funinstall.sh;0;4
+FILE_NAME_3=0;HTML;0;EUTF-8;0;1;1;%2Fhome%2Fl0k1%2Fprojects%2Fmdpreview-gtk3%2Fthemes%2Fsolarized.html;0;4
+FILE_NAME_4=0;HTML;0;EUTF-8;0;1;1;%2Fhome%2Fl0k1%2Fprojects%2Fmdpreview-gtk3%2Fthemes%2Fwhiteonblack.html;0;4
+FILE_NAME_5=0;HTML;0;EUTF-8;0;1;1;%2Fhome%2Fl0k1%2Fprojects%2Fmdpreview-gtk3%2Fthemes%2Fgithub.html;0;4
+FILE_NAME_6=0;HTML;0;EUTF-8;0;1;1;%2Fhome%2Fl0k1%2Fprojects%2Fmdpreview-gtk3%2Fthemes%2Fbitbucket.html;0;4
+FILE_NAME_7=0;Sh;0;EUTF-8;0;1;1;%2Fhome%2Fl0k1%2Fprojects%2Fmdpreview-gtk3%2Finstall.sh;0;4
+FILE_NAME_8=0;None;0;EUTF-8;0;1;1;%2Fhome%2Fl0k1%2Fprojects%2Fmdpreview-gtk3%2FLICENSE;0;4
+FILE_NAME_9=0;Python;0;EUTF-8;0;1;1;%2Fhome%2Fl0k1%2Fprojects%2Fmdpreview-gtk3%2Fmdpreview;0;4
 
 [VTE]
 last_dir=/home/l0k1
